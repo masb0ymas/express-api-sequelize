@@ -4,6 +4,7 @@ import { addDays } from 'date-fns'
 import fs from 'fs'
 import path from 'path'
 import { logger } from '~/config/logger'
+import { storageExists } from '../boolean'
 import { ms } from '../date'
 import { currentDir } from '../string'
 import { GoogleCloudStorageParams, UploadFileParams } from './types'
@@ -22,9 +23,10 @@ export default class GoogleCloudStorage {
     this._expires = params.expires
     this._filepath = path.resolve(`${currentDir}/${params.filepath}`)
 
+    const isStorageEnabled = storageExists()
     const msgType = `${green('storage - google cloud storage')}`
 
-    if (!this._access_key && !fs.existsSync(this._filepath)) {
+    if (isStorageEnabled && !this._access_key && !fs.existsSync(this._filepath)) {
       const message = `${msgType} serviceAccount is missing on root directory`
       logger.error(message)
 
