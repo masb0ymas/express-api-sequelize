@@ -16,12 +16,12 @@ export default async function expressErrorValidation(
     logger.error(`${msgType} - ${message}`)
 
     const errors =
-      err.errors.length > 0
-        ? err.errors.reduce((acc: any, curVal: any) => {
+      err.issues.length > 0
+        ? err.issues.reduce((acc: any, curVal: any) => {
             acc[`${curVal.path}`] = curVal.message || curVal.type
             return acc
           }, {})
-        : { [`${err.errors[0].path}`]: err.errors[0].message }
+        : { [`${err.issues[0].path}`]: err.issues[0].message }
 
     const result = {
       statusCode: 422,

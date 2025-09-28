@@ -64,13 +64,13 @@ export class App {
   }
 
   public get create() {
-    // @ts-expect-error
+    // error validation handle
     this._app.use(expressErrorValidation)
 
-    // @ts-expect-error
+    // error sequelize handle
     this._app.use(expressErrorSequelize)
 
-    // @ts-expect-error
+    // error global handle
     this._app.use(expressErrorHandle)
 
     return this._app
