@@ -26,37 +26,14 @@ export const changePasswordSchema = passwordSchema
 
 export const userSchema = passwordSchema
   .extend({
-    fullname: z
-      .string({
-        required_error: 'fullname is required',
-        invalid_type_error: 'fullname must be a string',
-      })
-      .min(2, "fullname can't be empty"),
-    email: z
-      .string({
-        required_error: 'email is required',
-        invalid_type_error: 'email must be a string',
-      })
-      .email({ message: 'invalid email address' })
-      .min(2, "email can't be empty"),
+    fullname: z.string('fullname is required').min(2, "fullname can't be empty"),
+    email: z.email({ message: 'invalid email address' }).min(2, "email can't be empty"),
     phone: z.string().nullable(),
     token_verify: z.string().nullable(),
-    upload_id: z.string().uuid({ message: 'upload_id invalid uuid format' }).nullable(),
-    is_active: z.boolean({
-      required_error: 'is_active is required',
-      invalid_type_error: 'is_active must be a boolean',
-    }),
-    is_blocked: z.boolean({
-      required_error: 'is_blocked is required',
-      invalid_type_error: 'is_blocked must be a boolean',
-    }),
-    role_id: z
-      .string({
-        required_error: 'role id is required',
-        invalid_type_error: 'role id must be a string',
-      })
-      .uuid({ message: 'role id invalid uuid format' })
-      .min(2, `role id can't be empty`),
+    upload_id: z.uuid('upload_id invalid uuid format').nullable(),
+    is_active: z.boolean('is_active is required'),
+    is_blocked: z.boolean('is_blocked is required'),
+    role_id: z.uuid('role id invalid uuid format').min(2, `role id can't be empty`),
   })
   .refine((data) => data.new_password === data.confirm_new_password, {
     message: "passwords don't match",
@@ -64,7 +41,7 @@ export const userSchema = passwordSchema
   })
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: 'invalid email address' }).min(2, "email can't be empty"),
+  email: z.email('invalid email address').min(2, "email can't be empty"),
   password: z.string().min(2, "password can't be empty"),
   latitude: z.string().nullable(),
   longitude: z.string().nullable(),
