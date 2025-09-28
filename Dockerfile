@@ -6,9 +6,11 @@ FROM base AS deps
 # Set the Temp Working Directory inside the container
 WORKDIR /temp-deps
 
+RUN npm install -g pnpm@latest-10
+
 # copy package json
-COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install --frozen-lockfile
+COPY ["package.json", "pnpm-lock.yaml", "./"]
+RUN pnpm install --frozen-lockfile
 
 FROM base AS builder
 
@@ -22,8 +24,10 @@ COPY . .
 RUN cp .env.example .env
 COPY --from=deps /temp-deps/node_modules ./node_modules
 
+RUN npm install -g pnpm@latest-10
+
 # prune devDependencies
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
+RUN pnpm build && pnpm install --production --ignore-scripts --prefer-offline
 
 # image runner app
 FROM base AS runner
